@@ -1,24 +1,24 @@
 {
-	"xsappname": "admin-list",
+	"xsappname": "editor-list",
 	"tenant-mode": "dedicated",
 	"scopes": [
 		{
-			"name": "$XSAPPNAME.readadmin",
-			"description": "Role to read data"
+			"name": "$XSAPPNAME.edit",
+			"description": "Role to read admin data"
 		}
 	],
 	"role-templates": [
 		{
-			"name": "vieweradmin",
-			"description": "Viewer Role",
-			"scope-references": ["$XSAPPNAME.readadmin"]
+			"name": "editviewer",
+			"description": "Editor admin Role",
+			"scope-references": ["$XSAPPNAME.edit"]
 		}
 	],
 	"role-collections": [
 		{
-			"name": "adminReadRoleCollections",
-			"description": "Admin Role Collection",
-			"role-template-references": ["$XSAPPNAME.vieweradmin"]
+			"name": "editorReadRoleCollections",
+			"description": "Editor Role Collection",
+			"role-template-references": ["$XSAPPNAME.editviewer"]
 		}
 	]
 }

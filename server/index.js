@@ -13,7 +13,10 @@ import xsenv from '@sap/xsenv';
 import passport from 'passport';
 // DB
 import client from './db/index.js';
-import { checkAdminReadScope } from './middleware/index.js';
+// Middleware
+import { checkPublicScope } from './middleware/index.js';
+// Routes
+import { dummyData } from './routes/dummy.js';
 
 try {
 	client.connect();
@@ -60,15 +63,11 @@ if (process.env.NODE_ENV !== 'development') {
 
 	app.use(passport.initialize());
 	app.use(passport.authenticate('JWT', { session: false }));
+	// app.use(checkAdminReadScope);
 }
 
-app.use(checkAdminReadScope);
-
-// Serve our static build files
-app.use(express.static(path.join(__dirname, './build')));
-
-app.get('/', checkAdminReadScope, (req, res) => {
-	res.sendFile(path.join(__dirname, './build/index.html'));
+app.get('/', checkPublicScope, (req, res, next) => {
+	res.send('Ok');
 });
 
 /** **************DEFAULT API ENDPOINT*************** */
@@ -91,11 +90,11 @@ app.listen(app.get('port'), () => {
 /** ************************************************************ */
 /** **********************ALL Routes*************************** */
 /** ********************************************************** */
-// dummyData(router);
+dummyData(router);
 
 // Serving react on routes unused by previous routing
 app.get('*', (req, res) => {
-	res.send('404 Page Not Found!');
+	res.status(404).send('Custom 404 Page Not Found!');
 });
 
 export default app;

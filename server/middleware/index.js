@@ -1,8 +1,8 @@
-//Production Route for admin double check
-export const checkAdminReadScope = (req, res, next) => {
-	if (req.authInfo.checkLocalScope('readadmin')) {
+//Production Route for public double check
+export const checkPublicScope = (req, res, next) => {
+	if (req.authInfo.checkLocalScope('edit')) {
 		next();
 	} else {
-		res.status(404).end('Page Not Found');
+		res.status(403).end('Forbidden');
 	}
 };

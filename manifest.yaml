@@ -1,16 +1,16 @@
 applications:
   # Application
-  - name: admin-list
+  - name: editor-list
     instance: 1
     path: server
     routes:
-      - route: admin-list.cfapps.us10.hana.ondemand.com
+      - route: editor-list.cfapps.us10.hana.ondemand.com
     memory: 128M
     timeout: 180
     buildpacks:
       - nodejs_buildpack
     services:
-      - xsuaa-admin-list
+      - xsuaa-editor-list
   #Approuter
   - name: approuter-admin
     path: approuter
@@ -21,13 +21,13 @@ applications:
       - nodejs_buildpack
     services:
       - my-post-db
-      - xsuaa-admin-list
+      - xsuaa-editor-list
     env:
       destinations: >
         [
           {
             "name": "admin-dest",
-            "url":  "https://admin-list.cfapps.us10.hana.ondemand.com",            
+            "url":  "https://editor-list.cfapps.us10.hana.ondemand.com",            
             "forwardAuthToken": true
           }
         ]
