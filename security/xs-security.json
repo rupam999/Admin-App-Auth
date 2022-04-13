@@ -1,0 +1,24 @@
+{
+	"xsappname": "admin-list",
+	"tenant-mode": "dedicated",
+	"scopes": [
+		{
+			"name": "$XSAPPNAME.readadmin",
+			"description": "Role to read data"
+		}
+	],
+	"role-templates": [
+		{
+			"name": "vieweradmin",
+			"description": "Viewer Role",
+			"scope-references": ["$XSAPPNAME.readadmin"]
+		}
+	],
+	"role-collections": [
+		{
+			"name": "adminReadRoleCollections",
+			"description": "Admin Role Collection",
+			"role-template-references": ["$XSAPPNAME.vieweradmin"]
+		}
+	]
+}
