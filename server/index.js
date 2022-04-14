@@ -1,12 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import logger from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import cors from 'cors';
 import dotenv from 'dotenv';
 // Error Handler for Dev
 import errorHandler from 'errorhandler';
+// Logger
+import logger from './logger/index.js';
+import morgan from 'morgan';
 // XSUAA Auth
 import { JWTStrategy } from '@sap/xssec';
 import xsenv from '@sap/xsenv';
@@ -20,9 +23,9 @@ import { dummyData } from './routes/dummy.js';
 
 try {
 	client.connect();
-	console.log('CONNECTED');
+	logger.info('DB CONNECTED');
 } catch (err) {
-	console.log(err);
+	logger.error('Database connection error', err);
 }
 
 const app = express();
@@ -44,10 +47,25 @@ dotenv.config({
 	path: path.join(__dirname, '.env'),
 });
 
+/** **************REQUEST LOG*************** */
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev'));
+} else {
+	app.use(
+		morgan(
+			':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :response-time ms',
+			{
+				stream: fs.createWriteStream(path.join(__dirname, 'access.log'), {
+					flags: 'a',
+				}),
+			}
+		)
+	);
+}
+
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(
 	bodyParser.urlencoded({
@@ -83,12 +101,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.listen(app.get('port'), () => {
-	console.log(
-		'Node.js App is running at http://localhost:%d',
-		app.get('port'),
-		app.get('env')
+	logger.info(
+		`Node.js App is running at http://localhost:${app.get('port')} in ${app.get(
+			'env'
+		)} server`
 	);
-	console.log('Press CTRL-C to stop\n');
+	logger.info('Press CTRL-C to stop\n');
 });
 
 /** ************************************************************ */
