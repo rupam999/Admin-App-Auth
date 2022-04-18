@@ -86,7 +86,6 @@ if (process.env.NODE_ENV !== 'development') {
 
 // Serve our static build files
 app.use(checkPublicScope).use(express.static(path.join(__dirname, './build')));
-// app.use(express.static(path.join(__dirname, './build')));
 
 app.get('/', checkPublicScope, (req, res, next) => {
 	res.sendFile(path.join(__dirname, './build/index.html'));
